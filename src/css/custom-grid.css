@@ -1,0 +1,55 @@
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-2px);
+  }
+}
+
+.rdg {
+  border: none;
+  text-align: center;
+}
+
+.rdg-cell {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.rdg-cell[role='columnheader'] {
+  color: #fff;
+  font-size: 15px;
+}
+
+.rdg-cell[aria-selected='true'] {
+  outline: 2px solid #bbbefe;
+}
+
+a.title {
+  display: block;
+  text-decoration: none;
+  color: #bbbefe;
+  text-align: left;
+  transition: ease-in 0.4s;
+}
+
+a.title:hover {
+  text-decoration: underline;
+}
+
+.likes-cell {
+  cursor: pointer;
+}
+
+.likes-cell:hover svg {
+  animation: bounce 2s linear 0s infinite alternate;
+  margin-top: 0;
+}
+
+.likes-cell svg {
+  margin-right: 5px;
+}
+
+.likes-cell.active svg {
+  color: yellow;
+}

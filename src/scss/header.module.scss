@@ -1,0 +1,144 @@
+@import './variables.module.scss';
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-3px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(3px);
+  }
+}
+
+.header {
+  width: 100%;
+  margin-bottom: 20px;
+  padding-top: 30px;
+
+  &.list {
+    width: auto;
+    max-width: 1280px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin: 0 auto 50px;
+    padding: 30px 30px 0;
+
+    button {
+      display: flex;
+      border: none;
+      color: $color-yellow;
+      font-weight: bold;
+      background: none;
+      font-size: 16px;
+      padding: 0;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+
+      &:hover .arrow {
+        animation: shake 4s ease infinite;
+      }
+    }
+
+    @include mobile {
+      position: relative;
+      display: block;
+
+      h1 {
+        justify-content: start;
+      }
+
+      button {
+        position: absolute;
+        top: 55px;
+        right: 30px;
+        font-size: 0;
+      }
+    }
+  }
+
+  h1 {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin: 0;
+    font-size: 30px;
+    text-align: center;
+  }
+
+  img {
+    width: 55px;
+    height: 55px;
+    margin-right: 10px;
+  }
+
+  a {
+    color: $color-lavender;
+    text-decoration: none;
+
+    &:hover {
+      color: $color-lavender;
+      text-decoration: underline;
+    }
+  }
+
+  .signout {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    margin: 0 10px 0 0;
+
+    img {
+      position: absolute;
+      left: 0;
+      width: 25px;
+      height: 25px;
+      margin: 0;
+    }
+  }
+}
+
+// .header {
+//   display: flex;
+//   width: 100%;
+//   align-items: flex-end;
+//   justify-content: space-between;
+//   margin: 30px 0 60px;
+
+//   h1 {
+//     display: flex;
+//     align-items: flex-end;
+//     justify-content: center;
+//     margin: 0;
+//     font-size: 30px;
+//     text-align: center;
+//   }
+
+//   img {
+//     width: 55px;
+//     height: 55px;
+//     margin-right: 10px;
+//   }
+
+//   a {
+//     color: $color-lavender;
+//     text-decoration: none;
+
+//     &:hover {
+//       color: $color-lavender;
+//       text-decoration: underline;
+//     }
+//   }
+
+// }
