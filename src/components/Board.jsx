@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
 import axios from 'axios';
 import {
   faArrowLeft,
@@ -14,7 +15,6 @@ import Swal from 'sweetalert2';
 const DEVELOP_URL = 'http://api.hyoshincopy.com';
 
 const Board = ({ boardList }) => {
-  const DEVELOP_URL = 'http://api.hyoshincopy.com';
   const navigate = useNavigate();
   const { id, title, content, created_at, updated_at, author, views, likes } =
     boardList;
@@ -28,6 +28,43 @@ const Board = ({ boardList }) => {
     });
   };
 
+  const deleteMutation = useMutation(
+    (newPost) =>
+      axios.delete(
+        `${DEVELOP_URL}/board`,
+        {
+          author: author,
+          ...newPost,
+        },
+        {
+          withCredentials: true,
+        }
+      ),
+    {
+      onError: (error) => {
+        console.error('error:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Post delete is failed.',
+          icon: 'error',
+          confirmButtonColor: '#ff5252',
+          confirmButtonText: 'OK',
+        });
+      },
+      onSuccess: () => {
+        Swal.fire({
+          title: 'Success',
+          text: 'Post delete is complete.',
+          icon: 'success',
+          confirmButtonColor: '#48bf91',
+          confirmButtonText: 'OK',
+        }).then(() => {
+          navigate('/board');
+        });
+      },
+    }
+  );
+
   const deleteBoard = () => {
     Swal.fire({
       title: 'Are you sure?',
@@ -39,21 +76,9 @@ const Board = ({ boardList }) => {
       confirmButtonText: 'Delete',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        try {
-          const response = axios.post(
-            `${DEVELOP_URL}/delete`,
-            {
-              boardId: id,
-            },
-            {
-              withCredentials: true,
-            }
-          );
-          console.log('response.data', response.data);
-          navigate('/board');
-        } catch (error) {
-          console.log('에러 페이지');
-        }
+        deleteMutation.mutate({
+          boardId: id,
+        });
       }
     });
   };

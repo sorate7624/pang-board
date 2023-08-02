@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Board from '../components/Board';
 
+const DEVELOP_URL = 'http://api.hyoshincopy.com';
+
 const BoardDetail = () => {
-  const DEVELOP_URL = 'http://api.hyoshincopy.com';
   const { id } = useParams();
   const [boardList, setBoardList] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getBoardList = async () => {
@@ -23,10 +25,11 @@ const BoardDetail = () => {
         setBoardList(dataList);
       } catch (error) {
         console.log('error', error);
+        navigate('/error', { state: error });
       }
     };
     getBoardList();
-  }, [id]);
+  }, [id, navigate]);
 
   return (
     <>

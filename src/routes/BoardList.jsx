@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import boardStyles from '../scss/board.module.scss';
 import classNames from 'classnames';
 import '../css/custom-grid.css';
@@ -9,8 +10,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import 'react-data-grid/lib/styles.css';
 import DataGrid from 'react-data-grid';
 
+const DEVELOP_URL = 'http://api.hyoshincopy.com';
+
 const BoardList = () => {
-  const DEVELOP_URL = 'http://api.hyoshincopy.com';
   const navigate = useNavigate();
   const [boardList, setBoardList] = useState([]);
   const [isHovering, setIsHovering] = useState(false);
@@ -21,18 +23,26 @@ const BoardList = () => {
 
   const getBoardList = async () => {
     const token = localStorage.getItem('token');
-    try {
-      const response = await axios.get(`${DEVELOP_URL}/board`, {
-        headers: {
-          Authorization: `${token}`,
-        },
-      });
-      setBoardList(response.data.data_list);
-      setTotalRow(response.data.data_list.length);
-    } catch (error) {
-      console.log('error', error);
-    }
+    const response = await axios.get(`${DEVELOP_URL}/board`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    setBoardList(response.data.data_list);
+    setTotalRow(response.data.data_list.length);
+    return response.data.data_list;
   };
+
+  const { isError } = useQuery('boardList', getBoardList, {
+    onError: (error) => {
+      console.log('Error occurred:', error);
+    },
+  });
+
+  if (isError) {
+    navigate('/error');
+    return;
+  }
 
   const convertUtcToKst = (utcTime) => {
     const utcDateTime = new Date(utcTime);
@@ -65,6 +75,7 @@ const BoardList = () => {
 
   const handleLikes = async (boardId) => {
     const userId = localStorage.getItem('userId');
+
     try {
       const response = await axios.post(
         `${DEVELOP_URL}/board/likes`,
@@ -87,6 +98,7 @@ const BoardList = () => {
       }
     } catch (error) {
       console.log('에러 페이지');
+      navigate('/error');
     }
   };
 

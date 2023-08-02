@@ -1,21 +1,19 @@
 import { useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useMutation } from 'react-query';
 import axios from 'axios';
-import {
-  faTriangleExclamation,
-  faArrowLeft,
-} from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import updateStyles from '../scss/update.module.scss';
 import 'animate.css/animate.min.css';
 import classNames from 'classnames';
 import Swal from 'sweetalert2';
 
+const DEVELOP_URL = 'http://api.hyoshincopy.com';
+
 const BoardUpdate = () => {
-  const DEVELOP_URL = 'http://api.hyoshincopy.com';
   const navigate = useNavigate();
   const { id } = useParams();
-  const [errorUpdate, setErrorUpdate] = useState('');
   const location = useLocation();
   const { title, content } = location.state;
   const [updateContent, setUpdateContent] = useState(content);
@@ -26,37 +24,51 @@ const BoardUpdate = () => {
     setUpdateContent(value);
   };
 
-  const handleUpdateSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      const response = await axios.put(
+  const updateMutation = useMutation(
+    (newPost) =>
+      axios.put(
         `${DEVELOP_URL}/board`,
         {
-          boardId: id,
-          content,
+          ...newPost,
         },
         {
           withCredentials: true,
         }
-      );
-      console.log('response.data', response.data);
-      Swal.fire({
-        title: 'Success',
-        text: 'Post update is complete.',
-        icon: 'success',
-        showCancelButton: true,
-        confirmButtonColor: '#48bf91',
-        cancelButtonColor: '#aaa',
-        confirmButtonText: 'OK',
-      }).then(async (result) => {
-        if (result.isConfirmed) {
+      ),
+    {
+      onError: (error) => {
+        console.error('error:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Post update is failed.',
+          icon: 'error',
+          confirmButtonColor: '#ff5252',
+          confirmButtonText: 'OK',
+        }).then(() => {
           navigate('/board');
-        }
-      });
-    } catch (error) {
-      setErrorUpdate('Failed to update a post. Please Contact Pang.');
+        });
+      },
+      onSuccess: () => {
+        Swal.fire({
+          title: 'Success',
+          text: 'Post update is complete.',
+          icon: 'success',
+          confirmButtonColor: '#48bf91',
+          confirmButtonText: 'OK',
+        }).then(() => {
+          navigate('/board');
+        });
+      },
     }
+  );
+
+  const handleUpdateSubmit = async (event) => {
+    event.preventDefault();
+
+    updateMutation.mutate({
+      boardId: id,
+      content,
+    });
   };
 
   const moveToList = () => {
@@ -132,12 +144,6 @@ const BoardUpdate = () => {
               className={updateStyles['input-submit']}
               value="Update a post"
             />
-            {errorUpdate && (
-              <p className={updateStyles['notice-txt']}>
-                <FontAwesomeIcon icon={faTriangleExclamation} />
-                {errorUpdate}
-              </p>
-            )}
           </div>
         </form>
       </main>

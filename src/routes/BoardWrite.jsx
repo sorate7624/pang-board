@@ -1,26 +1,22 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
 import axios from 'axios';
-import {
-  faTriangleExclamation,
-  faArrowLeft,
-} from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import writeStyles from '../scss/write.module.scss';
 import 'animate.css/animate.min.css';
 import classNames from 'classnames';
 import Swal from 'sweetalert2';
 
-const BoardWrite = () => {
-  const DEVELOP_URL = 'http://api.hyoshincopy.com';
-  const navigate = useNavigate();
-  const [errorWrite, setErrorWrite] = useState('');
+const DEVELOP_URL = 'http://api.hyoshincopy.com';
 
+const BoardWrite = () => {
+  const navigate = useNavigate();
   const [board, setBoard] = useState({
     title: '',
     content: '',
   });
-
   const { title, content } = board;
   const author = localStorage.getItem('userId');
 
@@ -32,40 +28,52 @@ const BoardWrite = () => {
     });
   };
 
-  const handleWriteSubmit = async (event) => {
-    event.preventDefault();
-
-    const userId = localStorage.getItem('userId');
-
-    try {
-      const response = await axios.post(
+  const writeMutation = useMutation(
+    (newPost) =>
+      axios.post(
         `${DEVELOP_URL}/board`,
         {
-          author: userId,
-          title,
-          content,
+          author: author,
+          ...newPost,
         },
         {
           withCredentials: true,
         }
-      );
-      Swal.fire({
-        title: 'Success',
-        text: 'Post registration is complete.',
-        icon: 'success',
-        showCancelButton: true,
-        confirmButtonColor: '#48bf91',
-        cancelButtonColor: '#aaa',
-        confirmButtonText: 'OK',
-      }).then(async (result) => {
-        if (result.isConfirmed) {
+      ),
+    {
+      onError: (error) => {
+        console.error('error:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Post registration is failed.',
+          icon: 'error',
+          confirmButtonColor: '#ff5252',
+          confirmButtonText: 'OK',
+        }).then(() => {
           navigate('/board');
-        }
-      });
-      console.log('response.data', response.data);
-    } catch (error) {
-      setErrorWrite('Failed to write a post. Please Contact Pang.');
+        });
+      },
+      onSuccess: () => {
+        Swal.fire({
+          title: 'Success',
+          text: 'Post registration is complete.',
+          icon: 'success',
+          confirmButtonColor: '#48bf91',
+          confirmButtonText: 'OK',
+        }).then(() => {
+          navigate('/board');
+        });
+      },
     }
+  );
+
+  const handleWriteSubmit = (event) => {
+    event.preventDefault();
+
+    writeMutation.mutate({
+      title,
+      content,
+    });
   };
 
   const moveToList = () => {
@@ -143,12 +151,6 @@ const BoardWrite = () => {
               className={writeStyles['input-submit']}
               value="Write a post"
             />
-            {errorWrite && (
-              <p className={writeStyles['notice-txt']}>
-                <FontAwesomeIcon icon={faTriangleExclamation} />
-                {errorWrite}
-              </p>
-            )}
           </div>
         </form>
       </main>

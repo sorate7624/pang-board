@@ -1,6 +1,6 @@
 import errorStyles from '../scss/error.module.scss';
 const Error = ({ props }) => {
-  console.log('props', props);
+  // console.log('props', props.error);
 
   return (
     <>

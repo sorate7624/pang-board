@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
 import signinStyles from '../scss/signin.module.scss';
 import classNames from 'classnames';
 import {
@@ -11,10 +12,11 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
+const DEVELOP_URL = 'http://api.hyoshincopy.com';
+
 const Home = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const DEVELOP_URL = 'http://api.hyoshincopy.com';
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [errorSignin, setErrorSignin] = useState('');
@@ -35,90 +37,95 @@ const Home = () => {
     setEyeIconVisible(!eyeIconVisible);
   };
 
-  const handleSigninSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      const response = await axios.post(
+  const signinMutation = useMutation(
+    (newPost) =>
+      axios.post(
         `${DEVELOP_URL}/signin`,
         {
-          signinId: id,
-          signinPw: password,
+          ...newPost,
         },
         {
           withCredentials: true,
         }
-      );
-      setErrorSignin('');
-      console.log('response.data: ', response.data);
-      console.log('response: ', response);
-      console.log('로그인 성공했으니 목록으로 넘어가야 함');
+      ),
+    {
+      onError: (error) => {
+        const errorCode = error.response?.status;
+        if (errorCode === 400) {
+          setErrorSignin('Invalid ID/Password. Please try again.');
+        } else {
+          setErrorSignin('Server error. Please Contact Pang.');
+        }
+      },
+      onSuccess: (data) => {
+        setErrorSignin('');
+        const token = data.data.token;
+        console.log('token:', token);
 
-      const token = response.data.token;
-      console.log('token:', token);
-
-      if (state) {
-        navigate(state);
-      } else {
-        localStorage.setItem('userId', id);
-        localStorage.setItem('token', token);
-        navigate('/board');
-      }
-    } catch (error) {
-      const errorCode = error.response.status;
-      setErrorSignin(error.message);
-
-      if (errorCode === 400) {
-        setErrorSignin('Invalid ID/Password. Please try again.');
-      } else {
-        setErrorSignin('Server error. Please Contact Pang.');
-      }
-      console.error('로그인 실패:', error.message);
-      console.log(error);
+        if (state) {
+          navigate(state);
+        } else {
+          localStorage.setItem('userId', id);
+          localStorage.setItem('token', token);
+          navigate('/board');
+        }
+      },
     }
+  );
+
+  const handleSigninSubmit = async (event) => {
+    event.preventDefault();
+
+    signinMutation.mutate({
+      signinId: id,
+      signinPw: password,
+    });
   };
+
+  const signupMutation = useMutation(
+    (newPost) =>
+      axios.post(
+        `${DEVELOP_URL}/signup`,
+        {
+          ...newPost,
+        },
+        {
+          withCredentials: true,
+        }
+      ),
+    {
+      onError: (error) => {
+        const errorCode = error.response?.status;
+        setSuccessSignup('');
+        if (errorCode === 400) {
+          setErrorSignup('ID is duplicated.');
+        } else {
+          setErrorSignup('Server error. Please Contact Pang.');
+        }
+        console.error('회원 등록 실패:', error.message);
+        console.log(error);
+      },
+      onSuccess: () => {
+        setErrorSignup('');
+        setSuccessSignup('Sign up is complete. Please log in.');
+      },
+    }
+  );
 
   const handleSignupSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const response = await axios.post(
-        `${DEVELOP_URL}/signup`,
-        {
-          signupId: id,
-          signupPw: password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-      console.log('response.data: ', response.data);
-
-      setErrorSignup('');
-      setSuccessSignup('Sign up is complete. Please log in.');
-    } catch (error) {
-      const errorCode = error.response.status;
-      setSuccessSignup('');
-      if (errorCode === 400) {
-        setErrorSignup('ID is duplicated.');
-      } else {
-        setErrorSignup('Server error. Please Contact Pang.');
-      }
-      console.error('회원 등록 실패:', error.message);
-      console.log(error);
-    }
+    signupMutation.mutate({
+      signupId: id,
+      signupPw: password,
+    });
   };
 
   const toggleSigninButton = (event) => {
     const isSigninButton =
       event.target.getAttribute('data-status') === 'signin';
 
-    if (isSigninButton) {
-      setIsSigninActive(true);
-    } else {
-      setIsSigninActive(false);
-    }
-
+    setIsSigninActive(isSigninButton);
     setId('');
     setPassword('');
     setEyeIconVisible(false);
