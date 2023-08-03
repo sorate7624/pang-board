@@ -13,4 +13,4 @@ RUN npm install cors
 WORKDIR /app
 COPY --from=build /app/dist ./dist
 EXPOSE 5173
-CMD ["http-server", "-p", "5173"]
+CMD ["http-server", "./dist", "-p", "5173"]
