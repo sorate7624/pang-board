@@ -149,6 +149,23 @@ const Home = () => {
                 <h3>Welcome, Pang board</h3>
                 <small>We are happy to have you back.</small>
               </div>
+              <div
+                className={signinStyles['switch']}
+                onClick={toggleSigninButton}
+              >
+                <button
+                  className={classNames(
+                    signinStyles['signin'],
+                    signinStyles['btn-active']
+                  )}
+                  data-status="signin"
+                >
+                  Sign In
+                </button>
+                <button className={signinStyles['signup']} data-status="signup">
+                  Sign Up
+                </button>
+              </div>
               <form
                 className={signinStyles['box-signin']}
                 onSubmit={handleSigninSubmit}
@@ -208,6 +225,23 @@ const Home = () => {
               <div className={signinStyles['top-header']}>
                 <h3>Sign Up, Now</h3>
                 <small>We are happy to have you with us.</small>
+              </div>
+              <div
+                className={signinStyles['switch']}
+                onClick={toggleSigninButton}
+              >
+                <button className={signinStyles['signin']} data-status="signin">
+                  Sign In
+                </button>
+                <button
+                  className={classNames(
+                    signinStyles['signup'],
+                    signinStyles['btn-active']
+                  )}
+                  data-status="signup"
+                >
+                  Sign Up
+                </button>
               </div>
               <form
                 className={signinStyles['box-signup']}
@@ -275,39 +309,6 @@ const Home = () => {
               </form>
             </>
           )}
-          <div className={signinStyles['switch']} onClick={toggleSigninButton}>
-            {isSigninActive ? (
-              <>
-                <button
-                  className={classNames(
-                    signinStyles['signin'],
-                    signinStyles['btn-active']
-                  )}
-                  data-status="signin"
-                >
-                  Sign In
-                </button>
-                <button className={signinStyles['signup']} data-status="signup">
-                  Sign Up
-                </button>
-              </>
-            ) : (
-              <>
-                <button className={signinStyles['signin']} data-status="signin">
-                  Sign In
-                </button>
-                <button
-                  className={classNames(
-                    signinStyles['signup'],
-                    signinStyles['btn-active']
-                  )}
-                  data-status="signup"
-                >
-                  Sign Up
-                </button>
-              </>
-            )}
-          </div>
         </div>
       </main>
     </>

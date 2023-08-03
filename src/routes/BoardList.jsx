@@ -9,6 +9,10 @@ import { faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import 'react-data-grid/lib/styles.css';
 import DataGrid from 'react-data-grid';
+import EmptyRows from '../components/EmptyRows';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import '@sweetalert2/themes/dark/dark.scss';
+import '../css/custom-sweetalert2.css';
 
 const DEVELOP_URL = 'http://api.hyoshincopy.com';
 
@@ -36,12 +40,13 @@ const BoardList = () => {
   const { isError } = useQuery('boardList', getBoardList, {
     onError: (error) => {
       console.log('Error occurred:', error);
+      navigate('/error', { state: error });
     },
   });
 
   if (isError) {
     navigate('/error');
-    return;
+    return null;
   }
 
   const convertUtcToKst = (utcTime) => {
@@ -88,7 +93,6 @@ const BoardList = () => {
         }
       );
       const result = response.data.result;
-      console.log('result', result);
       if (result) {
         console.log('좋아요!!');
         setLikes(true);
@@ -96,9 +100,20 @@ const BoardList = () => {
         console.log('좋아요 취소');
         setLikes(false);
       }
+      getBoardList();
     } catch (error) {
-      console.log('에러 페이지');
-      navigate('/error');
+      Swal.fire({
+        title: 'Error',
+        text: 'An error has occurred in Likes.',
+        icon: 'error',
+        confirmButtonColor: '#ff5252',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'dark-mode popup',
+          confirmButton: 'dark-mode btn',
+          cancelButton: 'dark-mode btn',
+        },
+      });
     }
   };
 
@@ -120,6 +135,7 @@ const BoardList = () => {
       {
         key: 'title',
         name: 'Title',
+        minWidth: 400,
         renderCell(props) {
           return (
             <Link to={`/board/${props.row.id}`} className="title">
@@ -135,15 +151,16 @@ const BoardList = () => {
           return convertUtcToKst(props.row.updated_at);
         },
       },
-      { key: 'views', name: 'Views' },
+      { key: 'views', name: 'Views', width: 100 },
       {
         key: 'likes',
         name: 'Likes',
+        width: 100,
         renderCell(props) {
           return (
             <div
               onClick={() => handleLikes(props.row.id)}
-              className={likes ? 'active' : 'likes-cell'}
+              className={likes ? 'likes-cell active' : 'likes-cell'}
             >
               <FontAwesomeIcon icon={faThumbsUp} />
               {props.row.likes}
@@ -186,6 +203,7 @@ const BoardList = () => {
             className="pang-grid"
             headerRowHeight={45}
             style={{ blockSize: 'calc(100%)' }}
+            renderers={{ noRowsFallback: <EmptyRows /> }}
           />
         </section>
       </main>

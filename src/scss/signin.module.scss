@@ -1,10 +1,14 @@
 @import './variables.module.scss';
 
 .container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   display: flex;
   width: calc(100% - 60px);
   max-width: 400px;
-  margin: 50px auto 0;
+  margin: 50px auto;
+  transform: translate(-50%, -50%);
 }
 
 .header {
@@ -41,15 +45,11 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  padding: 60px 20px 30px 20px;
-  height: 550px;
+  padding: 60px 30px 100px;
   width: 350px;
-  max-width: 350px;
-  min-width: calc(100% - 40px);
   background-color: rgba(255, 255, 255, 0.4);
   -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
-  // border: 3px solid $color-lavender;
 }
 
 .top-header {
@@ -59,7 +59,7 @@
   h3 {
     font-size: 22px;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin: 0 0 8px;
     color: #333;
   }
 
@@ -75,7 +75,7 @@
 .input-field {
   display: flex;
   position: relative;
-  margin: 12px 0;
+  margin: 15px 0;
   flex-wrap: wrap;
 }
 
@@ -92,10 +92,10 @@
 
   &:focus ~ label,
   &:valid ~ label {
-    top: 2px;
-    font-size: 10px;
+    top: 3px;
+    font-size: 12px;
     color: $color-green;
-    font-weight: 500;
+    font-weight: bold;
   }
 }
 
@@ -146,27 +146,30 @@
   font-size: 15px;
   font-weight: 500;
   border: none;
-  background: $color-green;
-  color: #fff;
+  background: rgba(255, 255, 255, 0.5);
+  color: $color-green;
   box-shadow: 0px 4px 20px rgba(62, 9, 9, 0.145);
   cursor: pointer;
   transition: 0.4s;
 
   &.signup {
-    background-color: $color-blue;
+    color: $color-blue;
   }
 
   &:hover {
-    background-color: #8bd9c7;
+    color: #fff;
+    background-color: $color-green;
     box-shadow: 0px 4px 20px rgba(62, 9, 9, 0.32);
   }
 
   &.signup:hover {
-    background-color: #4db4d7;
+    background-color: $color-blue;
+    color: #fff;
   }
 }
 
 .notice-txt {
+  position: absolute;
   color: orange;
   font-weight: 500;
   font-size: 14px;
@@ -184,15 +187,13 @@
 
 .switch {
   display: flex;
-  position: absolute;
-  bottom: 50px;
-  left: 25px;
-  width: 85%;
+  width: 100%;
   height: 50px;
   background: rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(10px);
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  margin-bottom: 30px;
 
   button {
     display: flex;
@@ -200,7 +201,7 @@
     align-items: center;
     font-size: 14px;
     font-weight: 500;
-    color: #333;
+    color: #fff;
     border: none;
     background: transparent;
     width: 50%;
@@ -213,11 +214,11 @@
     }
 
     &.signin.btn-active {
-      color: $color-green;
+      background-color: $color-green;
     }
 
     &.signup.btn-active {
-      color: $color-blue;
+      background-color: $color-blue;
     }
   }
 }

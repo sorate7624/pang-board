@@ -1,0 +1,9 @@
+.dark-mode.popup {
+  background-color: #161f2f;
+  border-radius: 0;
+  border: 1px solid #bbbefe;
+}
+
+.dark-mode.btn {
+  border-radius: 0;
+}

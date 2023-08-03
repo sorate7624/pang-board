@@ -10,7 +10,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import detailStyles from '../scss/detail.module.scss';
 import 'animate.css/animate.min.css';
 import classNames from 'classnames';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import '@sweetalert2/themes/dark/dark.scss';
+import '../css/custom-sweetalert2.css';
 
 const DEVELOP_URL = 'http://api.hyoshincopy.com';
 
@@ -49,6 +51,11 @@ const Board = ({ boardList }) => {
           icon: 'error',
           confirmButtonColor: '#ff5252',
           confirmButtonText: 'OK',
+          customClass: {
+            popup: 'dark-mode popup',
+            confirmButton: 'dark-mode btn',
+            cancelButton: 'dark-mode btn',
+          },
         });
       },
       onSuccess: () => {
@@ -58,6 +65,11 @@ const Board = ({ boardList }) => {
           icon: 'success',
           confirmButtonColor: '#48bf91',
           confirmButtonText: 'OK',
+          customClass: {
+            popup: 'dark-mode popup',
+            confirmButton: 'dark-mode btn',
+            cancelButton: 'dark-mode btn',
+          },
         }).then(() => {
           navigate('/board');
         });
@@ -74,6 +86,11 @@ const Board = ({ boardList }) => {
       confirmButtonColor: '#ff5252',
       cancelButtonColor: '#aaa',
       confirmButtonText: 'Delete',
+      customClass: {
+        popup: 'dark-mode popup',
+        confirmButton: 'dark-mode btn',
+        cancelButton: 'dark-mode btn',
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         deleteMutation.mutate({

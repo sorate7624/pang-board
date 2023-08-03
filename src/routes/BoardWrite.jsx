@@ -7,7 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import writeStyles from '../scss/write.module.scss';
 import 'animate.css/animate.min.css';
 import classNames from 'classnames';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import '@sweetalert2/themes/dark/dark.scss';
+import '../css/custom-sweetalert2.css';
 
 const DEVELOP_URL = 'http://api.hyoshincopy.com';
 
@@ -49,6 +51,11 @@ const BoardWrite = () => {
           icon: 'error',
           confirmButtonColor: '#ff5252',
           confirmButtonText: 'OK',
+          customClass: {
+            popup: 'dark-mode popup',
+            confirmButton: 'dark-mode btn',
+            cancelButton: 'dark-mode btn',
+          },
         }).then(() => {
           navigate('/board');
         });
@@ -60,6 +67,11 @@ const BoardWrite = () => {
           icon: 'success',
           confirmButtonColor: '#48bf91',
           confirmButtonText: 'OK',
+          customClass: {
+            popup: 'dark-mode popup',
+            confirmButton: 'dark-mode btn',
+            cancelButton: 'dark-mode btn',
+          },
         }).then(() => {
           navigate('/board');
         });

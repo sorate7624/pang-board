@@ -7,7 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import updateStyles from '../scss/update.module.scss';
 import 'animate.css/animate.min.css';
 import classNames from 'classnames';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import '@sweetalert2/themes/dark/dark.scss';
+import '../css/custom-sweetalert2.css';
 
 const DEVELOP_URL = 'http://api.hyoshincopy.com';
 
@@ -44,8 +46,11 @@ const BoardUpdate = () => {
           icon: 'error',
           confirmButtonColor: '#ff5252',
           confirmButtonText: 'OK',
-        }).then(() => {
-          navigate('/board');
+          customClass: {
+            popup: 'dark-mode popup',
+            confirmButton: 'dark-mode btn',
+            cancelButton: 'dark-mode btn',
+          },
         });
       },
       onSuccess: () => {
@@ -55,6 +60,11 @@ const BoardUpdate = () => {
           icon: 'success',
           confirmButtonColor: '#48bf91',
           confirmButtonText: 'OK',
+          customClass: {
+            popup: 'dark-mode popup',
+            confirmButton: 'dark-mode btn',
+            cancelButton: 'dark-mode btn',
+          },
         }).then(() => {
           navigate('/board');
         });
@@ -71,8 +81,8 @@ const BoardUpdate = () => {
     });
   };
 
-  const moveToList = () => {
-    navigate('/board');
+  const moveToDetail = () => {
+    navigate(`/board/${id}`);
   };
 
   return (
@@ -83,7 +93,7 @@ const BoardUpdate = () => {
           'animate__animated animate__fadeIn'
         )}
       >
-        <button className={updateStyles['btn-back']} onClick={moveToList}>
+        <button className={updateStyles['btn-back']} onClick={moveToDetail}>
           <FontAwesomeIcon icon={faArrowLeft} />
           Back
         </button>

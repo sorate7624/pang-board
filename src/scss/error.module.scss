@@ -4,6 +4,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 600px;
   transform: translate(-50%, -50%);
   opacity: 0.7;
 
@@ -30,7 +31,7 @@
     color: #ebebeb;
     border: 30px solid $color-yellow;
     background-color: $color-lavender;
-    padding: 60px;
+    padding: 90px 60px;
 
     &::before,
     &::after {
@@ -48,14 +49,15 @@
       right: 60px;
     }
 
-    p {
-      margin: 0;
-      font-size: 130px;
+    .error-text {
+      font-size: 120px;
       font-weight: bold;
+      margin: 0 0 30px;
+    }
 
-      @include mobile {
-        font-size: 70px;
-      }
+    .link {
+      color: #fff;
+      font-size: 24px;
     }
   }
 }
