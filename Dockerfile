@@ -10,8 +10,7 @@ RUN npm run build
 FROM node:14 as production
 RUN npm install -g http-server
 RUN npm install cors
-RUN npm run start
 WORKDIR /app
-COPY . .
+COPY --from=build /app/dist ./dist
 EXPOSE 5173
-CMD ["http-server", "dev", "-p", "5173"]
+CMD ["http-server", "dist", "-p", "5173"]
