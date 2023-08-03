@@ -11,6 +11,6 @@ FROM node:14 as production
 RUN npm install -g http-server
 RUN npm install cors
 WORKDIR /app
-COPY --from=build /app/dist ./dist
+COPY . .
 EXPOSE 5173
 CMD ["http-server", "./dist", "-p", "5173"]
