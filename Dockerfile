@@ -1,16 +1,13 @@
-# Step 1: Build the React app
-FROM node:14 as build
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm install
-COPY . .
-RUN npm run build
+FROM node:18-alpine
 
-# Step 2: Serve the React app with http-server
-FROM node:14 as production
-RUN npm install -g http-server
-RUN npm install cors
-WORKDIR /app
-COPY . .
+WORKDIR /
+
 EXPOSE 5173
-CMD ["http-server", "-p", "5173"]
+
+COPY package.json package-lock.json ./
+
+RUN npm install --silent
+
+COPY . ./
+
+CMD ["npm", "run", "dev"]
