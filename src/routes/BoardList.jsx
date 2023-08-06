@@ -128,7 +128,7 @@ const BoardList = () => {
         name: 'No',
         width: 35,
         renderCell(props) {
-          return <>{props.row.id - 1}</>;
+          return <>{props.row.no}</>;
         },
       },
       { key: 'author', name: 'Author' },
