@@ -9,7 +9,7 @@ import {
   setSuccessSignup,
   setEyeIconVisible,
   setIsSigninActive,
-} from '../actions/actions.js';
+} from '../actions/homeActions';
 import signinStyles from '../scss/signin.module.scss';
 import classNames from 'classnames';
 import {
@@ -20,20 +20,19 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-
-const DEVELOP_URL = 'http://api.hyoshincopy.com';
+import { DEVELOP_URL } from '../consts/consts';
 
 const Home = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const dispatch = useDispatch();
-  const id = useSelector((state) => state.id);
-  const password = useSelector((state) => state.password);
-  const errorSignin = useSelector((state) => state.errorSignin);
-  const errorSignup = useSelector((state) => state.errorSignup);
-  const successSignup = useSelector((state) => state.successSignup);
-  const eyeIconVisible = useSelector((state) => state.eyeIconVisible);
-  const isSigninActive = useSelector((state) => state.isSigninActive);
+  const id = useSelector((state) => state.home.id);
+  const password = useSelector((state) => state.home.password);
+  const errorSignin = useSelector((state) => state.home.errorSignin);
+  const errorSignup = useSelector((state) => state.home.errorSignup);
+  const successSignup = useSelector((state) => state.home.successSignup);
+  const eyeIconVisible = useSelector((state) => state.home.eyeIconVisible);
+  const isSigninActive = useSelector((state) => state.home.isSigninActive);
 
   const handleIdChange = (event) => {
     const newId = event.target.value;

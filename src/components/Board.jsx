@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import axios from 'axios';
 import {
   faArrowLeft,
@@ -14,8 +14,7 @@ import classNames from 'classnames';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import '@sweetalert2/themes/dark/dark.scss';
 import '../css/custom-sweetalert2.css';
-
-const DEVELOP_URL = 'http://api.hyoshincopy.com';
+import { DEVELOP_URL } from '../consts/consts';
 
 const Board = ({ boardList }) => {
   const navigate = useNavigate();

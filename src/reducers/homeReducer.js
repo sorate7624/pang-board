@@ -1,4 +1,3 @@
-// reducer.js
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
@@ -11,7 +10,7 @@ const initialState = {
   isSigninActive: true,
 };
 
-const reducer = (state = initialState, action) => {
+const homeReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_ID:
       return { ...state, id: action.id };
@@ -32,4 +31,4 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-export default reducer;
+export default homeReducer;

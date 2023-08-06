@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSelectBoardList } from '../actions/detailActions';
 import axios from 'axios';
 import Board from '../components/Board';
-
-const DEVELOP_URL = 'http://api.hyoshincopy.com';
+import { DEVELOP_URL } from '../consts/consts';
 
 const BoardDetail = () => {
   const { id } = useParams();
-  const [boardList, setBoardList] = useState({});
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const selectBoardList = useSelector((state) => state.detail.selectBoardList);
 
   useEffect(() => {
     const getBoardList = async () => {
@@ -22,7 +24,7 @@ const BoardDetail = () => {
         const dataList = response.data.data_list.find(
           (item) => item.id === Number(id)
         );
-        setBoardList(dataList);
+        dispatch(setSelectBoardList(dataList));
       } catch (error) {
         console.log('error', error);
         navigate('/error', { state: error });
@@ -33,7 +35,7 @@ const BoardDetail = () => {
 
   return (
     <>
-      <Board boardList={boardList} />
+      <Board boardList={selectBoardList} />
     </>
   );
 };
