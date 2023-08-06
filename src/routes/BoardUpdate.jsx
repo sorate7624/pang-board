@@ -76,8 +76,8 @@ const BoardUpdate = () => {
     event.preventDefault();
 
     updateMutation.mutate({
-      boardId: id,
-      content,
+      boardId: Number(id),
+      content: updateContent,
     });
   };
 

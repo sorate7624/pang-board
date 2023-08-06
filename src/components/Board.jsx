@@ -1,5 +1,6 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import axios from 'axios';
 import {
   faArrowLeft,
@@ -20,6 +21,14 @@ const Board = ({ boardList }) => {
   const navigate = useNavigate();
   const { id, title, content, created_at, updated_at, author, views, likes } =
     boardList;
+  const [isWriter, setIsWriter] = useState(false);
+  const userId = localStorage.getItem('userId');
+
+  useEffect(() => {
+    if (author === userId) {
+      setIsWriter(true);
+    }
+  }, [boardList]);
 
   const moveToUpdate = () => {
     navigate(`/board/update/${id}`, {
@@ -35,8 +44,9 @@ const Board = ({ boardList }) => {
       axios.delete(
         `${DEVELOP_URL}/board`,
         {
-          author: author,
-          ...newPost,
+          data: {
+            ...newPost,
+          },
         },
         {
           withCredentials: true,
@@ -58,7 +68,8 @@ const Board = ({ boardList }) => {
           },
         });
       },
-      onSuccess: () => {
+      onSuccess: (response) => {
+        console.log(response);
         Swal.fire({
           title: 'Success',
           text: 'Post delete is complete.',
@@ -94,7 +105,7 @@ const Board = ({ boardList }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         deleteMutation.mutate({
-          boardId: id,
+          boardId: Number(id),
         });
       }
     });
@@ -191,14 +202,22 @@ const Board = ({ boardList }) => {
                 <span>{convertUtcToKst(updated_at)}</span>
               </div>
             </div>
-            <div className={detailStyles['btn-area']}>
-              <button onClick={moveToUpdate} className={detailStyles['update']}>
-                Update
-              </button>
-              <button onClick={deleteBoard} className={detailStyles['delete']}>
-                Delete
-              </button>
-            </div>
+            {isWriter && (
+              <div className={detailStyles['btn-area']}>
+                <button
+                  onClick={moveToUpdate}
+                  className={detailStyles['update']}
+                >
+                  Update
+                </button>
+                <button
+                  onClick={deleteBoard}
+                  className={detailStyles['delete']}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </main>
