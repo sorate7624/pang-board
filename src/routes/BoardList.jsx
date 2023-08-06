@@ -151,7 +151,7 @@ const BoardList = () => {
           return convertUtcToKst(props.row.updated_at);
         },
       },
-      { key: 'views', name: 'Views', width: 100 },
+      // { key: 'views', name: 'Views', width: 100 },
       {
         key: 'likes',
         name: 'Likes',

@@ -1,6 +1,15 @@
-import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  setId,
+  setPassword,
+  setErrorSignin,
+  setErrorSignup,
+  setSuccessSignup,
+  setEyeIconVisible,
+  setIsSigninActive,
+} from '../actions/actions.js';
 import signinStyles from '../scss/signin.module.scss';
 import classNames from 'classnames';
 import {
@@ -17,24 +26,27 @@ const DEVELOP_URL = 'http://api.hyoshincopy.com';
 const Home = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorSignin, setErrorSignin] = useState('');
-  const [errorSignup, setErrorSignup] = useState('');
-  const [successSignup, setSuccessSignup] = useState('');
-  const [eyeIconVisible, setEyeIconVisible] = useState(false);
-  const [isSigninActive, setIsSigninActive] = useState(true);
+  const dispatch = useDispatch();
+  const id = useSelector((state) => state.id);
+  const password = useSelector((state) => state.password);
+  const errorSignin = useSelector((state) => state.errorSignin);
+  const errorSignup = useSelector((state) => state.errorSignup);
+  const successSignup = useSelector((state) => state.successSignup);
+  const eyeIconVisible = useSelector((state) => state.eyeIconVisible);
+  const isSigninActive = useSelector((state) => state.isSigninActive);
 
   const handleIdChange = (event) => {
-    setId(event.target.value);
+    const newId = event.target.value;
+    dispatch(setId(newId));
   };
 
   const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
+    const newPassword = event.target.value;
+    dispatch(setPassword(newPassword));
   };
 
   const togglePasswordVisibility = () => {
-    setEyeIconVisible(!eyeIconVisible);
+    dispatch(setEyeIconVisible(!eyeIconVisible));
   };
 
   const signinMutation = useMutation(
@@ -52,15 +64,14 @@ const Home = () => {
       onError: (error) => {
         const errorCode = error.response?.status;
         if (errorCode === 400) {
-          setErrorSignin('Invalid ID/Password. Please try again.');
+          dispatch(setErrorSignin('Invalid ID/Password. Please try again.'));
         } else {
-          setErrorSignin('Server error. Please Contact Pang.');
+          dispatch(setErrorSignin('Server error. Please Contact Pang.'));
         }
       },
       onSuccess: (data) => {
-        setErrorSignin('');
+        dispatch(setErrorSignin(''));
         const token = data.data.token;
-        console.log('token:', token);
 
         if (state) {
           navigate(state);
@@ -96,24 +107,25 @@ const Home = () => {
     {
       onError: (error) => {
         const errorCode = error.response?.status;
-        setSuccessSignup('');
+        dispatch(setSuccessSignup(''));
         if (errorCode === 400) {
-          setErrorSignup('ID is duplicated.');
+          dispatch(setErrorSignup('ID is duplicated.'));
         } else {
-          setErrorSignup('Server error. Please Contact Pang.');
+          dispatch(setErrorSignup('Server error. Please Contact Pang.'));
         }
         console.error('회원 등록 실패:', error.message);
         console.log(error);
       },
       onSuccess: () => {
-        setErrorSignup('');
-        setSuccessSignup('Sign up is complete. Please log in.');
+        dispatch(setErrorSignup(''));
+        dispatch(setSuccessSignup('Sign up is complete. Please log in.'));
       },
     }
   );
 
   const handleSignupSubmit = async (event) => {
     event.preventDefault();
+    console.log('id', id);
 
     signupMutation.mutate({
       signupId: id,
@@ -125,13 +137,13 @@ const Home = () => {
     const isSigninButton =
       event.target.getAttribute('data-status') === 'signin';
 
-    setIsSigninActive(isSigninButton);
-    setId('');
-    setPassword('');
-    setEyeIconVisible(false);
-    setErrorSignin('');
-    setErrorSignup('');
-    setSuccessSignup('');
+    dispatch(setIsSigninActive(isSigninButton));
+    dispatch(setId(''));
+    dispatch(setPassword(''));
+    dispatch(setEyeIconVisible(false));
+    dispatch(setErrorSignin(''));
+    dispatch(setErrorSignup(''));
+    dispatch(setSuccessSignup(''));
   };
 
   return (
