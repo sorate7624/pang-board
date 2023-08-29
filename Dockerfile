@@ -2,7 +2,7 @@ FROM node
 
 WORKDIR /app
 
-EXPOSE 5173
+EXPOSE 8080
 
 COPY package.json package-lock.json ./
 
