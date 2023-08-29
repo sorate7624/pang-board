@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
+import { useSelector, useDispatch } from 'react-redux';
+import { setTitle, setContent } from '../actions/writeActions';
 import axios from 'axios';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,24 +12,23 @@ import classNames from 'classnames';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import '@sweetalert2/themes/dark/dark.scss';
 import '../css/custom-sweetalert2.css';
-
-const DEVELOP_URL = 'http://api.hyoshincopy.com';
+import { DEVELOP_URL } from '../consts/consts';
 
 const BoardWrite = () => {
   const navigate = useNavigate();
-  const [board, setBoard] = useState({
-    title: '',
-    content: '',
-  });
-  const { title, content } = board;
   const author = localStorage.getItem('userId');
+  const dispatch = useDispatch();
+  const title = useSelector((state) => state.write.title);
+  const content = useSelector((state) => state.write.content);
 
-  const onChange = (event) => {
-    const { value, name } = event.target;
-    setBoard({
-      ...board,
-      [name]: value,
-    });
+  const handleTitleChange = (event) => {
+    const newTitle = event.target.value;
+    dispatch(setTitle(newTitle));
+  };
+
+  const handleContentChange = (event) => {
+    const newContent = event.target.value;
+    dispatch(setContent(newContent));
   };
 
   const writeMutation = useMutation(
@@ -118,7 +119,7 @@ const BoardWrite = () => {
                   className={writeStyles['input-box']}
                   value={title}
                   required
-                  onChange={onChange}
+                  onChange={handleTitleChange}
                   maxLength={100}
                   placeholder="Enter a title..."
                 />
@@ -140,7 +141,7 @@ const BoardWrite = () => {
                   )}
                   value={content}
                   required
-                  onChange={onChange}
+                  onChange={handleContentChange}
                   maxLength={1000}
                   placeholder="Enter a content..."
                 />

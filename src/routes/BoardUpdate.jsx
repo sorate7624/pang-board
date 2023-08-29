@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useMutation } from 'react-query';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUpdateContent } from '../actions/updateActions';
 import axios from 'axios';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,21 +12,25 @@ import classNames from 'classnames';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import '@sweetalert2/themes/dark/dark.scss';
 import '../css/custom-sweetalert2.css';
-
-const DEVELOP_URL = 'http://api.hyoshincopy.com';
+import { DEVELOP_URL } from '../consts/consts';
 
 const BoardUpdate = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
   const { title, content } = location.state;
-  const [updateContent, setUpdateContent] = useState(content);
+  const dispatch = useDispatch();
+  const updateContent = useSelector((state) => state.update.updateContent);
   const author = localStorage.getItem('userId');
 
   const onChange = (event) => {
     const { value } = event.target;
-    setUpdateContent(value);
+    dispatch(setUpdateContent(value));
   };
+
+  useEffect(() => {
+    dispatch(setUpdateContent(content));
+  }, [content, dispatch]);
 
   const updateMutation = useMutation(
     (newPost) =>

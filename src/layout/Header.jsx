@@ -8,9 +8,9 @@ import headerStyles from '../scss/header.module.scss';
 import classNames from 'classnames';
 import 'animate.css/animate.min.css';
 import axios from 'axios';
+import { DEVELOP_URL } from '../consts/consts';
 
 const Header = () => {
-  const DEVELOP_URL = 'http://api.hyoshincopy.com';
   const navigate = useNavigate();
   const location = useLocation();
   const isBoardPage = location.pathname === '/board';
@@ -30,7 +30,6 @@ const Header = () => {
           withCredentials: true,
         }
       );
-      console.log('response', response);
       localStorage.removeItem('userId');
       localStorage.removeItem('token');
       navigate('/');

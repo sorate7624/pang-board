@@ -2,6 +2,15 @@ import { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  setBoardList,
+  setIsHovering,
+  setColumns,
+  setRows,
+  setLikes,
+  setTotalRow,
+} from '../actions/listActions';
 import boardStyles from '../scss/board.module.scss';
 import classNames from 'classnames';
 import '../css/custom-grid.css';
@@ -13,17 +22,17 @@ import EmptyRows from '../components/EmptyRows';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import '@sweetalert2/themes/dark/dark.scss';
 import '../css/custom-sweetalert2.css';
-
-const DEVELOP_URL = 'http://api.hyoshincopy.com';
+import { DEVELOP_URL } from '../consts/consts';
 
 const BoardList = () => {
   const navigate = useNavigate();
-  const [boardList, setBoardList] = useState([]);
-  const [isHovering, setIsHovering] = useState(false);
+  const dispatch = useDispatch();
+  const boardList = useSelector((state) => state.list.boardList);
+  const isHovering = useSelector((state) => state.list.isHovering);
+  const rows = useSelector((state) => state.list.rows);
+  const likes = useSelector((state) => state.list.likes);
+  const totalRow = useSelector((state) => state.list.totalRow);
   const [columns, setColumns] = useState([]);
-  const [rows, setRows] = useState([]);
-  const [likes, setLikes] = useState(false);
-  const [totalRow, setTotalRow] = useState(0);
 
   const getBoardList = async () => {
     const token = localStorage.getItem('token');
@@ -32,8 +41,8 @@ const BoardList = () => {
         Authorization: `${token}`,
       },
     });
-    setBoardList(response.data.data_list);
-    setTotalRow(response.data.data_list.length);
+    dispatch(setBoardList(response.data.data_list));
+    dispatch(setTotalRow(response.data.data_list.length));
     return response.data.data_list;
   };
 
@@ -71,11 +80,11 @@ const BoardList = () => {
   };
 
   const handleMouseOver = useMemo(() => {
-    setIsHovering(true);
+    dispatch(setIsHovering(true));
   }, []);
 
   const handleMouseOut = useMemo(() => {
-    setIsHovering(false);
+    dispatch(setIsHovering(false));
   }, []);
 
   const handleLikes = async (boardId) => {
@@ -95,10 +104,10 @@ const BoardList = () => {
       const result = response.data.result;
       if (result) {
         console.log('좋아요!!');
-        setLikes(true);
+        dispatch(setLikes(true));
       } else {
         console.log('좋아요 취소');
-        setLikes(false);
+        dispatch(setLikes(false));
       }
       getBoardList();
     } catch (error) {
@@ -151,7 +160,7 @@ const BoardList = () => {
           return convertUtcToKst(props.row.updated_at);
         },
       },
-      { key: 'views', name: 'Views', width: 100 },
+      // { key: 'views', name: 'Views', width: 100 },
       {
         key: 'likes',
         name: 'Likes',
@@ -173,7 +182,7 @@ const BoardList = () => {
       ...item,
       no: totalRow - index,
     }));
-    setRows(modifiedList);
+    dispatch(setRows(modifiedList));
   }, [boardList]);
 
   useEffect(() => {
