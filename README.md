@@ -2,13 +2,15 @@
 
 > 게시글을 자유롭게 작성할 수 있는 웹 사이트입니다.
 
-로그인 후 게시글을 작성하고, 목록화 된 게스글을 확인할 수 있으며 본인의 글에 수정/삭제가 가능합니다.
+로그인 후 게시글을 작성하고, 목록화 된 게시글을 확인할 수 있으며 본인의 글에 수정/삭제가 가능합니다.
 
 ### demo
 
 [http://panggini.site/](http://panggini.site/)
 
 ![pang-board](./pang-board.png)
+![pang-board-list](./pang-board-list.png)
+![pang-board-detail](./pang-board-detail.png)
 
 ## 설치 방법
 
